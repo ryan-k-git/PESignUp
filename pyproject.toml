@@ -1,0 +1,6 @@
+[project]
+name = "pesignup"
+version = "0.1.0-alpha.1"
+description = "Discord Signup Bot for NYP Piano Ensemble"
+requires-python = ">=3.13"
+dependencies = []
