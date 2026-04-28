@@ -55,6 +55,16 @@ class SignUpForm(ui.Modal, title="Verification Form"):
             else:
                 if application.status == 1:
                     await interaction.response.send_message(embed=ExistingMemberEmbed(), ephemeral=True)
-
+                    return
+        new_application = Application(
+            admin_no=self.adminNo,
+            name=self.full_name,
+            discord_id=interaction.user.id,
+            school=self.school,
+            phone_no=self.phone_number
+        )
+        await new_application.save()
+        embed = new_application.embed()
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
