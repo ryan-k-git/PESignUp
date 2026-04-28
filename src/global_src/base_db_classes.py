@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Literal
 from rapidfuzz import fuzz
 
+from global_src.base_embeds import BaseEmbed
 from global_src.db import DATABASE
 from global_src.general_utils.string_cleaning import normalize
 
@@ -11,7 +12,11 @@ class BaseClass(ABC):
     @abstractmethod
     async def save(self):
         raise NotImplementedError("Subclasses must implement the save method")
-    pass
+
+    @abstractmethod
+    async def embed(self):
+        raise NotImplementedError("Subclasses must implement the embed method")
+
 
 class MemberInfo(BaseClass):
     def __init__(self, discord_id: int, admin_no: str):
@@ -32,6 +37,12 @@ class MemberInfo(BaseClass):
             return None
         return cls(discord_id[0], admin_no)
 
+    async def embed(self):
+        embed = BaseEmbed(title="Member Info")
+        embed.add_field(name="Admin Number", value=self.admin_no, inline=False)
+        embed.add_field(name="Discord ID", value=self.id, inline=False)
+        return embed
+
     async def save(self):
         await DATABASE.execute("""
         INSERT INTO MemberInfo (AdminNo, DiscordID)
@@ -39,7 +50,8 @@ class MemberInfo(BaseClass):
         ON CONFLICT(AdminNo) DO UPDATE SET
             DiscordID=excluded.DiscordID
         """, (self.admin_no, self.id))
-        pass
+        return
+
 
 class MemberListInfo(BaseClass):
     def __init__(
@@ -101,6 +113,19 @@ class MemberListInfo(BaseClass):
         if best_match:
             return await cls.from_admin_no(best_match)
         return None
+
+    async def embed(self):
+        embed = BaseEmbed(title="Member List Info")
+        embed.add_field(name="Admin Number", value=self.admin_no, inline=False)
+        embed.add_field(name="Name", value=self.name, inline=False)
+        embed.add_field(name="Gender", value=self.gender, inline=False)
+        embed.add_field(name="School", value=self.school, inline=False)
+        embed.add_field(name="Study Stage", value=self.study_stage, inline=False)
+        embed.add_field(name="Phone No", value=self.phone_number, inline=False)
+        embed.add_field(name="Reg Date", value=self.reg_date, inline=False)
+        embed.add_field(name="Reg Status", value=self.reg_status, inline=False)
+        embed.add_field(name="Appointment Date", value=self.appointment_date, inline=False)
+        return embed
 
     async def save(self):
         await DATABASE.execute("""
@@ -178,6 +203,19 @@ class Application(BaseClass):
             last_modified=last_modified,
             message_id=message_id,
         )
+
+    async def embed(self):
+        embed = BaseEmbed(title="Application Info")
+        embed.add_field(name="Admin No", value=self.admin_no, inline=False)
+        embed.add_field(name="Discord ID", value=f"<@{self.discord_id}>", inline=False)
+        embed.add_field(name="Name", value=self.name, inline=False)
+        embed.add_field(name="School", value=self.school, inline=False)
+        embed.add_field(name="Phone No", value=self.phone_no, inline=False)
+        embed.add_field(name="Status", value=self.status, inline=False)
+        embed.add_field(name="Created", value=self.created, inline=False)
+        embed.add_field(name="Last Modified", value=self.last_modified, inline=False)
+        embed.add_field(name="Message ID", value=self.message_id, inline=False)
+        return embed
 
     async def save(self):
         await DATABASE.execute(
