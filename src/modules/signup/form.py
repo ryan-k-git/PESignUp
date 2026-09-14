@@ -4,7 +4,7 @@ import discord
 from discord import ui, Interaction
 from discord._types import ClientT
 
-from global_src.base_db_classes import Application
+from global_src.models import Application
 from modules.signup.embeds import ExistingApplicationEmbed, ExistingMemberEmbed
 
 
@@ -57,14 +57,14 @@ class SignUpForm(ui.Modal, title="Verification Form"):
                     await interaction.response.send_message(embed=ExistingMemberEmbed(), ephemeral=True)
                     return
         new_application = Application(
-            admin_no=self.adminNo,
-            name=self.full_name,
+            admin_no=self.adminNo.value,
+            name=self.full_name.value,
             discord_id=interaction.user.id,
-            school=self.school,
-            phone_no=self.phone_number
+            school=self.school.value,
+            phone_no=self.phone_number.value
         )
         await new_application.save()
-        embed = new_application.embed()
+        embed = await new_application.embed()
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 

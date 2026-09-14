@@ -9,7 +9,7 @@ from src.global_src.db import DATABASE
 async def clean_up():
     print("Closing connections")
     await bot.close()
-    await DATABASE.con.close()
+    await DATABASE.close()
 
 
 @bot.event
