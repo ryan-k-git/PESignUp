@@ -4,7 +4,7 @@ import discord
 from discord import ui, Interaction
 from discord._types import ClientT
 
-from global_src.models import Application
+from database.models import Application
 from modules.signup.embeds import ExistingApplicationEmbed, ExistingMemberEmbed
 
 

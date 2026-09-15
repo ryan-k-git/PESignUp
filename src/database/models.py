@@ -4,9 +4,9 @@ from rapidfuzz import fuzz
 from sqlalchemy import CheckConstraint, Text, UniqueConstraint, text
 from sqlmodel import Field, SQLModel, select
 
-from global_src.base_embeds import BaseEmbed
-from global_src.db import DATABASE
-from global_src.general_utils.string_cleaning import normalize
+from database.db import DATABASE
+from core.embeds import BaseEmbed
+from utils.string_cleaning import normalize
 
 NOW_DEFAULT = text("(DATETIME('now', 'localtime'))")
 

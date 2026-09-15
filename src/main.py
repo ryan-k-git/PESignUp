@@ -1,8 +1,9 @@
 import atexit
 import os
+from pathlib import Path
 
-from src.global_src.client import bot, TOKEN
-from src.global_src.db import DATABASE
+from core.client import bot, TOKEN
+from database import DATABASE
 
 
 @atexit.register
@@ -15,15 +16,14 @@ async def clean_up():
 @bot.event
 async def on_ready():
     await DATABASE.initialize()
-    cogs_path = "src/core/cogs"
+    cogs_path = Path(__file__).parent / "cogs"
     for filename in os.listdir(cogs_path):
-        try:
-            if filename.endswith(".py") and filename != "__init__.py":
-                cog_name = f"src.core.cogs.{filename[:-3]}"
-                await bot.load_extension(cog_name)
+        if filename.endswith(".py") and filename != "__init__.py":
+            try:
+                await bot.load_extension(f"cogs.{filename[:-3]}")
                 print(f"Loaded {filename[:-3]}")
-        except Exception as e:
-            print(f"Failed to load {filename}: {e}")
+            except Exception as e:
+                print(f"Failed to load {filename}: {e}")
     await bot.tree.sync()
     print("Successfully Ready")
 

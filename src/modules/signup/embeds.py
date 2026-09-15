@@ -1,4 +1,4 @@
-from global_src.base_embeds import BaseEmbed
+from core.embeds import BaseEmbed
 
 
 class ExistingApplicationEmbed(BaseEmbed):

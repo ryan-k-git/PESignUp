@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from global_src.constants import DATABASE_PATH
+DATABASE_PATH = Path(__file__).parent / "pesignup.db"
 
 
 class Database:
@@ -25,7 +25,7 @@ class Database:
             yield session
 
     async def initialize(self) -> None:
-        from global_src import models
+        from database import models
 
         async with self.engine.begin() as conn:
             await conn.run_sync(SQLModel.metadata.create_all)
