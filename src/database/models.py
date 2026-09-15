@@ -190,29 +190,6 @@ class Application(SQLModel, table=True):
             await session.commit()
 
 
-class GroupApplication(SQLModel, table=True):
-    __tablename__ = "GroupApplication"
-
-    admin_no: str = Field(
-        primary_key=True,
-        max_length=7,
-        foreign_key="MemberListInfo.AdminNo",
-        sa_column_kwargs={"name": "AdminNo"},
-    )
-    discord_id: int = Field(sa_column_kwargs={"name": "DiscordID"})
-    qualifications: str | None = Field(default=None, max_length=512, sa_column_kwargs={"name": "Qualifications"})
-    join_reasons: str | None = Field(default=None, max_length=512, sa_column_kwargs={"name": "JoinReasons"})
-    heard_from: str | None = Field(default=None, max_length=256, sa_column_kwargs={"name": "HeardFrom"})
-    others: str | None = Field(default=None, max_length=1024, sa_column_kwargs={"name": "Others"})
-    status: int = Field(default=0, sa_column_kwargs={"name": "Status"})
-    message_id: int | None = Field(default=None, sa_column_kwargs={"name": "MessageID"})
-    created: datetime.datetime | None = Field(
-        default_factory=datetime.datetime.now,
-        sa_column_kwargs={"name": "Created", "server_default": NOW_DEFAULT},
-    )
-    last_modified: datetime.datetime | None = Field(default=None, sa_column_kwargs={"name": "LastModified"})
-
-
 class OrganizedSession(SQLModel, table=True):
     __tablename__ = "OrganizedSession"
 

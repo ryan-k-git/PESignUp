@@ -1,7 +1,6 @@
 from database.db import DATABASE, Database
 from database.models import (
     Application,
-    GroupApplication,
     MemberInfo,
     MemberListInfo,
     OrganizedSession,
